@@ -22,7 +22,7 @@ function digitalRoot(num) {
     }
 }
 
-console.log(digitalRoot(44322));
+// console.log(digitalRoot(44322));
 
 // Write an `Array.prototype.dups` method that will return an object containing
 // the indices of all duplicate elements. The keys are the duplicate elements; 
@@ -31,8 +31,61 @@ console.log(digitalRoot(44322));
 // Example: 
 // [1, 3, 4, 3, 0, 3, 0].dups => { 3: [1, 3, 5], 0: [4, 6] }
 
+Array.prototype.dups = function() {
+    let hash = {}; //new Object();
 
-// Write an `Array.prototype.myFilter(callback)` that takes a callback and 
+    for (let i = 0; i < this.length; i++) {
+        const element = this[i];
+        if (element in hash){
+            hash[element].push(i);
+        }   else {
+            hash[element] = [i];
+    }
+    }
+    //iterate through has and select the key value pairs which values length is greater than 1
+    let dups = Object.keys(hash).filter(key => hash[key].length > 1);
+
+    Object.keys(hash).forEach( key => {
+        if( !dups.includes(key) ){
+            delete hash[key];
+        }
+    });
+
+    return hash;
+}
+//     this.forEach(num => {
+//         if (!num in hash){
+//             hash[num] = [this.indexOf(num)];
+//         }    // hash does not have number we need to declare in hash and add index to value
+//         else {
+//             hash[num].push(this.indexOf(num));
+//         }// add add index to value for its key
+//     });
+//     return hash;
+//     // we will return the keys with only 2 or more indicies/integers
+// }
+
+Array.prototype.dups = function() {
+    let hash = {}; //new Object();
+    let dup = {};
+
+    this.forEach( (num, idx) => { 
+        hash[num] = hash[num] || []
+        hash[num].push(idx)
+    });
+
+    Object.keys(hash).forEach( (key,value) => {
+        if( hash[key].length > 1) {
+            dup[key] = hash[key];
+        }
+    });
+
+    return dup
+}
+
+console.log([1,1,2,2,3,3,4].dups());
+
+// Write an `Array.prototype.myFilter(callback)` that takes a callback and
 // returns a new array which includes every element for which the callback 
 // returned true. Use the `Array.prototype.myEach` method you defined above. Do 
 // NOT call the built-in `Array.prototype.filter` or `Array.prototype.forEach` 
@@ -81,13 +134,13 @@ function titleize(str) {
     let result = [];
 
     words.forEach(word => {
-       if (safe.includes(word) && words.indexOf(word) !== 0) {
+       if (safe.includes(word)) {
             result.push(word);
         } else {
             result.push(new_word(word));
         }
     });
-
+    result[0] = result[0][0].toUpperCase() + result[0].slice(1).toLowerCase();
     return result.join(" ");
 }
 
